@@ -1,0 +1,413 @@
+:root {
+    --bg-dark: #020617;
+    --navy-deep: #0f172a;
+    --electric-blue: #3b82f6;
+    --electric-glow: rgba(59, 130, 246, 0.5);
+    --neon-yellow: #fbbf24;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --transition-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-apple: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-dark);
+    color: var(--text-primary);
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Background Layers (Unchanged) */
+#bg-canvas-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -3;
+    background: radial-gradient(circle at center, var(--navy-deep) 0%, var(--bg-dark) 100%);
+}
+
+.grid-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+    background-image: 
+        linear-gradient(rgba(59, 130, 246, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(59, 130, 246, 0.05) 1px, transparent 1px);
+    background-size: 40px 40px;
+    mask-image: radial-gradient(ellipse at center, black, transparent 80%);
+}
+
+.bloom-effect {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80vmax;
+    height: 80vmax;
+    background: radial-gradient(circle, var(--electric-glow) 0%, transparent 70%);
+    z-index: -1;
+    filter: blur(80px);
+    opacity: 0.3;
+    pointer-events: none;
+}
+
+.floating-icons-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.floating-icon {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    opacity: 0.3;
+    animation: float-antigravity 20s infinite ease-in-out;
+}
+
+.floating-icon svg {
+    width: 100%;
+    height: 100%;
+    stroke: var(--electric-blue);
+    stroke-width: 1px;
+    fill: none;
+    filter: drop-shadow(0 0 5px var(--electric-blue));
+}
+
+@keyframes float-antigravity {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    33% { transform: translate(20px, -30px) rotate(10deg); }
+    66% { transform: translate(-15px, 20px) rotate(-10deg); }
+}
+
+/* Main Container */
+.experience-container {
+    position: relative;
+    width: 100%;
+    max-width: 500px;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+}
+
+/* Cover Card Styling */
+.cover-card {
+    position: absolute;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 1s var(--transition-apple), opacity 0.8s ease;
+    z-index: 20;
+}
+
+.cover-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, var(--electric-glow) 0%, transparent 70%);
+    z-index: -1;
+    opacity: 0.5;
+}
+
+.logos-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.cover-logo-main {
+    width: 280px;
+    height: auto;
+    filter: drop-shadow(0 0 20px rgba(59, 130, 246, 0.5));
+}
+
+.cover-logo-sub {
+    height: 60px;
+    width: auto;
+    opacity: 0.8;
+}
+
+.open-btn {
+    padding: 16px 40px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    border-radius: 50px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s var(--transition-smooth);
+}
+
+.open-btn:hover {
+    background: rgba(59, 130, 246, 0.1);
+    border-color: var(--electric-blue);
+    box-shadow: 0 0 30px var(--electric-glow);
+    transform: translateY(-2px);
+}
+
+/* Revelation State */
+.experience-container.revealed .cover-card {
+    transform: scale(0.85) translateY(-50px);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.invitation-reveal {
+    position: absolute;
+    width: 100%;
+    opacity: 0;
+    transform: translateY(50px);
+    transition: transform 1s var(--transition-apple) 0.2s, opacity 1s ease 0.2s;
+    pointer-events: none;
+}
+
+.experience-container.revealed .invitation-reveal {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+/* Invitation Card Styling */
+.invitation-card {
+    background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.95) 100%);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    border-radius: 24px;
+    padding: 40px 24px;
+    box-shadow: 0 40px 100px rgba(0,0,0,0.6), 0 0 50px rgba(59, 130, 246, 0.1);
+    backdrop-filter: blur(20px);
+    max-width: 400px;
+    margin: 0 auto;
+    position: relative;
+    overflow: hidden;
+}
+
+.summit-logo {
+    width: 100%;
+    max-width: 240px;
+    margin: 0 auto 10px;
+    display: block;
+}
+
+.experience-container.revealed .summit-logo {
+    animation: title-glow-reveal 2s forwards;
+}
+
+@keyframes title-glow-reveal {
+    0% { filter: brightness(1) drop-shadow(0 0 0 transparent); }
+    50% { filter: brightness(1.5) drop-shadow(0 0 20px var(--electric-blue)); }
+    100% { filter: brightness(1) drop-shadow(0 0 10px var(--electric-glow)); }
+}
+
+.subtitle {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    color: var(--electric-blue);
+    letter-spacing: 0.2em;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.divider {
+    width: 40px;
+    height: 1px;
+    background: var(--neon-yellow);
+    margin: 20px auto;
+    box-shadow: 0 0 10px var(--neon-yellow);
+}
+
+.date-range {
+    font-size: 2.2rem;
+    font-weight: 800;
+    text-align: center;
+    background: linear-gradient(180deg, #fff 0%, #94a3b8 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin: 10px 0;
+}
+
+.theme-section {
+    text-align: center;
+    margin: 15px 0;
+}
+
+.theme-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    letter-spacing: 0.1em;
+}
+
+.theme-text {
+    font-size: 1.1rem;
+    color: var(--neon-yellow);
+    font-weight: 600;
+    margin-top: 5px;
+}
+
+.description-section {
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin: 20px 0;
+}
+
+.description-section strong {
+    color: white;
+}
+
+.event-details {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin: 20px 0;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+}
+
+.detail-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.detail-item .label {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
+
+.detail-item .value {
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.venue-section {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.venue-title {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    color: var(--electric-blue);
+}
+
+.venue-name {
+    font-weight: 600;
+    margin: 5px 0;
+}
+
+.venue-location {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.card-footer {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.kpil-logo {
+    height: 40px;
+    width: auto;
+    opacity: 0.9;
+}
+
+/* Lightning Effect */
+.lightning-flash {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: white;
+    z-index: 100;
+    pointer-events: none;
+    opacity: 0;
+    animation: flash 0.5s ease-out forwards;
+}
+
+@keyframes flash {
+    0% { opacity: 0; }
+    20% { opacity: 0.7; }
+    40% { opacity: 0.2; }
+    60% { opacity: 0.5; }
+    100% { opacity: 0; }
+}
+
+.particle {
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+    pointer-events: none;
+    opacity: 0.3;
+}
+
+/* Desktop Responsiveness */
+@media (min-width: 1024px) {
+    .invitation-card {
+        max-width: 480px;
+        padding: 50px 40px;
+    }
+    
+    .date-range {
+        font-size: 2.8rem;
+    }
+    
+    .summit-logo {
+        max-width: 300px;
+    }
+
+    .cover-logo-main {
+        width: 400px;
+    }
+}
+
+@media (max-width: 480px) {
+    .invitation-card {
+        width: 90vw;
+        padding: 30px 20px;
+    }
+    
+    .date-range {
+        font-size: 1.8rem;
+    }
+}
