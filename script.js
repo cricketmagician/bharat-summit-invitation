@@ -72,13 +72,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const triggerReveal = () => {
         if (!experience.classList.contains('revealed')) {
-            experience.classList.add('revealed');
-            triggerLightning();
+            // Step 1: Scale down and glow
+            cover.classList.add('clicked');
             
-            if (window.navigator.vibrate) {
-                window.navigator.vibrate([50, 20, 50]);
-            }
+            // Step 2: Slide up and reveal after a brief delay
+            setTimeout(() => {
+                experience.classList.add('revealed');
+                triggerLightning();
+                pulseParticles();
+                
+                if (window.navigator.vibrate) {
+                    window.navigator.vibrate([50, 20, 50]);
+                }
+            }, 600);
         }
+    };
+
+    const pulseParticles = () => {
+        const particles = document.querySelectorAll('.particle');
+        particles.forEach(p => {
+            p.style.transition = 'all 0.5s ease';
+            p.style.transform = 'scale(2)';
+            p.style.opacity = '0.8';
+            setTimeout(() => {
+                p.style.transform = 'scale(1)';
+                p.style.opacity = '0.3';
+            }, 500);
+        });
     };
 
     const triggerLightning = () => {

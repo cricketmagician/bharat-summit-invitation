@@ -52,6 +52,12 @@ body {
         linear-gradient(90deg, rgba(59, 130, 246, 0.05) 1px, transparent 1px);
     background-size: 40px 40px;
     mask-image: radial-gradient(ellipse at center, black, transparent 80%);
+    animation: grid-pulse 8s infinite alternate ease-in-out;
+}
+
+@keyframes grid-pulse {
+    0% { opacity: 0.5; }
+    100% { opacity: 1; }
 }
 
 .bloom-effect {
@@ -120,8 +126,14 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    transition: transform 1s var(--transition-apple), opacity 0.8s ease;
+    transition: transform 1.2s var(--transition-apple), opacity 0.8s ease, filter 0.8s ease;
     z-index: 20;
+    padding: 20px;
+}
+
+.cover-card.clicked {
+    transform: scale(0.92);
+    filter: drop-shadow(0 0 30px var(--electric-glow));
 }
 
 .cover-glow {
@@ -190,14 +202,16 @@ body {
     position: absolute;
     width: 100%;
     opacity: 0;
-    transform: translateY(50px);
-    transition: transform 1s var(--transition-apple) 0.2s, opacity 1s ease 0.2s;
+    transform: translateY(80px);
+    filter: blur(20px);
+    transition: transform 1.2s var(--transition-apple) 0.3s, opacity 1s ease 0.3s, filter 1s ease 0.3s;
     pointer-events: none;
 }
 
 .experience-container.revealed .invitation-reveal {
     opacity: 1;
     transform: translateY(0);
+    filter: blur(0);
     pointer-events: auto;
 }
 
@@ -222,14 +236,34 @@ body {
     display: block;
 }
 
-.experience-container.revealed .summit-logo {
-    animation: title-glow-reveal 2s forwards;
+@keyframes title-glow-reveal {
+    0% { opacity: 0; transform: scale(0.95); filter: brightness(2) blur(10px); }
+    100% { opacity: 1; transform: scale(1); filter: brightness(1) blur(0); }
 }
 
-@keyframes title-glow-reveal {
-    0% { filter: brightness(1) drop-shadow(0 0 0 transparent); }
-    50% { filter: brightness(1.5) drop-shadow(0 0 20px var(--electric-blue)); }
-    100% { filter: brightness(1) drop-shadow(0 0 10px var(--electric-glow)); }
+.experience-container.revealed .summit-logo {
+    animation: title-glow-reveal 1.5s var(--transition-apple) forwards;
+}
+
+.reveal-glow-bar {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 0;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    z-index: 5;
+    pointer-events: none;
+}
+
+.experience-container.revealed .reveal-glow-bar {
+    animation: glow-pass 2s ease-in-out forwards;
+}
+
+@keyframes glow-pass {
+    0% { left: -100%; width: 50%; opacity: 0; }
+    50% { opacity: 1; }
+    100% { left: 200%; width: 50%; opacity: 0; }
 }
 
 .subtitle {
